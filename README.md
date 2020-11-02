@@ -1,6 +1,5 @@
 # Travelling Salesman Problem in JavaScript Canvas
 
-See details: [http://blog.johannes-beck.name/?p=222](http://blog.johannes-beck.name/?p=222)
+Got an email from chris@hobbyelektronik.org who did a complete rework of the code with various improvements.
+I'd happily like to share this: [http://chris.files.hobbyelektronik.org/tsp/](http://chris.files.hobbyelektronik.org/tsp/)
 
-
-	
