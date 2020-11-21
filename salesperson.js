@@ -418,6 +418,7 @@ class TravelingSalesperson
         
         let result = new Array(this.points.length);
 
+        this.neurons.indexNodes();
         let nodes = this.neurons.getNodes();
         this.points.forEach((point_value, point_index) => {
             let neuron = nodes.find((neuron_value) => {
