@@ -168,6 +168,19 @@ class TspNeuronRing
         }
         return dist;
     }
+
+    getNodes()
+    {
+        this.neurons.indexNodes();
+        let nodes = [];
+        let node = this.start;
+        for (let i = 0; i < this.length; i++)
+        {
+            nodes.push(node);
+            node = node.next;
+        }
+        return nodes;
+    }
 }
 
 /* the simulator containing all the data */
@@ -389,37 +402,33 @@ class TravelingSalesperson
         }
     }
 
-    _findPoint(p, epsilon)
+    getPointOrder(callbackfn, epsilon)
     {
-        let eps = epsilon || Number.EPSILON * Number.EPSILON;
-        for(let i = 0; i < this.points.length; i++)
+        if(callbackfn === undefined)
         {
-            let point = this.points[i];
-            let a = point.x - p.x;
-            let b = point.y - p.y;
-            let dist =  (a * a) + (b * b);
-            if(dist <= eps)
+            // assign a default function
+            callbackfn = (point_value, point_index, point_array, neuron_value, neuron_index, neuron_array) =>
             {
-                return [i, point];
+                return [point_index, neuron_value];
             }
         }
-        return null;
-    }
+        if(epsilon === undefined)
+            epsilon = Number.EPSILON
 
-    getPointOrder()
-    {
-        if(this.neurons.length != this.points.length)
-        {
-            //no solution
-            return null;
-        }
-        let result = [];
-        let node = this.neurons.start;
-        for (let i = 0; i < this.neurons.length; i++)
-        {
-            result.push(this._findPoint(node));
-            node = node.next;
-        }
+        let eps = epsilon * epsilon;
+        
+        let result = new Array(this.points.length);
+
+        
+        let nodes = this.neurons.getNodes();
+        this.points.forEach((point_value, point_index) => {
+            let neuron = nodes.find((neuron_value) => {
+                let dist = neuron_value.potential(point_value);
+                return dist <= eps;
+            });
+            if(neuron)
+                result[neuron.ringpos] = callbackfn(point_value, point_index, this.points, neuron, neuron.ringpos, nodes);
+        })
         return result;
     }
 }
